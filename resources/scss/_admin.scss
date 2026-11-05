@@ -1,0 +1,607 @@
+// ---------------------------------------------------------------------------
+// Interface d'administration — sobre, dense et lisible.
+// Couleurs de la charte utilisées avec retenue : vert pour les actions,
+// jaune uniquement pour signaler ce qui demande une attention.
+// Tout est scopé sous .admin-body : le site public n'est pas impacté.
+// ---------------------------------------------------------------------------
+
+$ad-bg: #f4f5f2;
+$ad-surface: #fff;
+$ad-border: #e3e6df;
+$ad-border-strong: #d2d7cf;
+$ad-text: #1b2820;
+$ad-muted: #66736b;
+$ad-green: #014d23;
+$ad-green-hover: #013c1b;
+$ad-sidebar: #0f2a1c;
+$ad-gold: #fbc201;
+$ad-radius: 10px;
+
+.admin-body {
+    --bs-body-bg: #{$ad-bg};
+    --bs-body-color: #{$ad-text};
+    --bs-border-color: #{$ad-border};
+    --bs-link-color-rgb: 1, 77, 35;
+    --bs-link-hover-color-rgb: 1, 60, 27;
+
+    display: block;
+    min-height: 100vh;
+    background: $ad-bg;
+    color: $ad-text;
+    font-size: 0.875rem;
+    line-height: 1.55;
+
+    a:hover { text-decoration: none; }
+
+    h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; color: $ad-text; }
+
+    .text-brand { color: $ad-green !important; }
+    .text-muted { color: $ad-muted !important; }
+
+    // -----------------------------------------------------------------------
+    // Structure
+    // -----------------------------------------------------------------------
+    .admin-shell { display: flex; min-height: 100vh; }
+
+    .admin-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+    .admin-content {
+        width: 100%;
+        max-width: 1400px;
+        padding: 1.75rem;
+
+        > .container { max-width: none; padding: 0; margin: 0 0 1.25rem !important; }
+
+        @media (max-width: 575.98px) { padding: 1.25rem 1rem; }
+    }
+
+    // -----------------------------------------------------------------------
+    // Barre latérale
+    // -----------------------------------------------------------------------
+    .admin-sidebar {
+        --bs-offcanvas-width: 264px;
+        --bs-offcanvas-bg: #{$ad-sidebar};
+
+        display: flex;
+        flex-direction: column;
+        width: 248px;
+        flex-shrink: 0;
+        color: rgba(255, 255, 255, 0.75);
+        background-color: $ad-sidebar !important;
+
+        @media (min-width: 992px) {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+    }
+
+    .sidebar-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.25rem 1rem;
+    }
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #fff;
+
+        strong { display: block; font-family: 'Calicanto', Georgia, serif; font-weight: 800; font-size: 1.3rem; line-height: 1.1; }
+        small { display: block; font-size: 0.72rem; color: rgba(255, 255, 255, 0.5); }
+    }
+
+    .sidebar-nav { padding: 0.5rem 0.75rem 1rem; }
+
+    .sidebar-group {
+        margin: 1.25rem 0.75rem 0.4rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .sidebar-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.55rem 0.75rem;
+        margin-bottom: 2px;
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.72);
+        font-weight: 500;
+        transition: background-color 0.15s, color 0.15s;
+
+        i { font-size: 1rem; width: 1.1rem; text-align: center; opacity: 0.85; }
+
+        &:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+
+        &.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: -0.75rem;
+                top: 0.5rem;
+                bottom: 0.5rem;
+                width: 3px;
+                border-radius: 0 3px 3px 0;
+                background: $ad-gold;
+            }
+        }
+    }
+
+    .sidebar-count {
+        margin-left: auto;
+        min-width: 1.4rem;
+        padding: 0.05rem 0.45rem;
+        border-radius: 50rem;
+        background: $ad-gold;
+        color: $ad-green;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .sidebar-foot {
+        margin-top: auto;
+        padding: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    // -----------------------------------------------------------------------
+    // Barre supérieure
+    // -----------------------------------------------------------------------
+    .admin-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        height: 64px;
+        padding: 0 1.75rem;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid $ad-border;
+
+        @media (max-width: 575.98px) { padding: 0 1rem; }
+    }
+
+    .topbar-title { font-weight: 600; font-size: 0.95rem; }
+
+    .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.3rem 0.5rem 0.3rem 0.3rem;
+        border: 0;
+        border-radius: 50rem;
+        background: transparent;
+        color: $ad-text;
+        line-height: 1.25;
+
+        &:hover, &[aria-expanded='true'] { background: $ad-bg; }
+
+        small { color: $ad-muted; font-size: 0.75rem; }
+    }
+
+    .avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: $ad-green;
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .btn-icon {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $ad-border;
+        font-size: 1.25rem;
+    }
+
+    // -----------------------------------------------------------------------
+    // En-têtes de page (y compris le motif « d-flex + h1.h3 » des vues)
+    // -----------------------------------------------------------------------
+    .admin-content h1,
+    .admin-content .h3 {
+        font-family: 'Calicanto', Georgia, serif;
+        font-weight: 700;
+        font-size: 1.65rem;
+        color: $ad-text !important;
+        letter-spacing: -0.005em;
+
+        .text-muted { font-family: 'Poppins', sans-serif; font-size: 0.95rem !important; font-weight: 400; }
+    }
+
+    .page-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        h1 { margin: 0; }
+    }
+
+    .page-kicker { margin: 0 0 0.2rem; color: $ad-muted; font-size: 0.82rem; }
+
+    .event-countdown {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.6rem 1rem;
+        border: 1px solid $ad-border;
+        border-radius: $ad-radius;
+        background: $ad-surface;
+        color: $ad-muted;
+        font-size: 0.8rem;
+        line-height: 1.3;
+
+        strong { color: $ad-text; font-weight: 600; }
+    }
+
+    .event-countdown-value {
+        font-family: 'Calicanto', Georgia, serif;
+        font-weight: 800;
+        font-size: 1.7rem;
+        color: $ad-green;
+    }
+
+    // -----------------------------------------------------------------------
+    // Indicateurs du tableau de bord
+    // -----------------------------------------------------------------------
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+
+        @media (max-width: 1199.98px) { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 575.98px) { gap: 0.75rem; }
+    }
+
+    .kpi {
+        display: flex;
+        flex-direction: column;
+        padding: 1.1rem 1.25rem;
+        border: 1px solid $ad-border;
+        border-radius: $ad-radius;
+        background: $ad-surface;
+        color: $ad-text;
+        transition: border-color 0.15s;
+
+        &:hover { border-color: $ad-border-strong; color: $ad-text; }
+    }
+
+    .kpi-label { display: flex; align-items: center; gap: 0.45rem; color: $ad-muted; font-weight: 500; font-size: 0.82rem; }
+    .kpi-value { margin: 0.35rem 0 0.15rem; font-size: 1.9rem; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .kpi-meta { color: $ad-muted; font-size: 0.78rem; }
+
+    .kpi-alert .kpi-label::after {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: $ad-gold;
+        box-shadow: 0 0 0 3px rgba($ad-gold, 0.25);
+    }
+
+    .status-row + .status-row { margin-top: 0.9rem; }
+
+    .progress { height: 6px; background: #eef0ec; border-radius: 50rem; }
+
+    .progress-bar {
+        border-radius: 50rem;
+
+        &.status-nouveau { background: $ad-gold; }
+        &.status-en_cours { background: #65a227; }
+        &.status-accepte { background: $ad-green; }
+        &.status-refuse { background: #c0392b; }
+    }
+
+    .message-item {
+        padding: 0.8rem 1.25rem;
+
+        .message-from { color: $ad-text; }
+        .message-subject { color: $ad-muted; font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        &.unread .message-from {
+            font-weight: 600;
+
+            &::before {
+                content: '';
+                display: inline-block;
+                width: 7px;
+                height: 7px;
+                margin-right: 0.45rem;
+                border-radius: 50%;
+                background: $ad-gold;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .content-list .list-group-item { padding: 0.75rem 1.25rem; color: $ad-text; }
+
+    .link-more { font-size: 0.8rem; font-weight: 500; color: $ad-green; i { font-size: 0.75rem; } }
+
+    .empty-state { padding: 2.5rem 1rem !important; text-align: center; color: $ad-muted; }
+
+    // -----------------------------------------------------------------------
+    // Cartes
+    // -----------------------------------------------------------------------
+    .card {
+        --bs-card-border-color: #{$ad-border};
+        --bs-card-border-radius: #{$ad-radius};
+        --bs-card-inner-border-radius: #{$ad-radius - 1px};
+        --bs-card-cap-bg: #{$ad-surface};
+
+        border: 1px solid $ad-border;
+        box-shadow: none;
+        transition: none;
+
+        &:hover { transform: none; box-shadow: none; }
+    }
+
+    .card-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.9rem 1.25rem;
+        background: $ad-surface !important;
+        border-bottom: 1px solid $ad-border;
+
+        h2, .h6 {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.92rem !important;
+            font-weight: 600;
+            color: $ad-text !important;
+
+            i { color: $ad-muted; }
+        }
+    }
+
+    .card-body { padding: 1.25rem; }
+    .card-footer { padding: 0.85rem 1.25rem; background: $ad-surface !important; border-top: 1px solid $ad-border; }
+    .card.p-4 { padding: 1.5rem !important; }
+
+    // -----------------------------------------------------------------------
+    // Tableaux
+    // -----------------------------------------------------------------------
+    .table {
+        --bs-table-bg: transparent;
+        --bs-table-hover-bg: #f8f9f6;
+        --bs-table-border-color: #{$ad-border};
+
+        margin-bottom: 0;
+
+        thead th {
+            padding: 0.65rem 1rem;
+            background: #f8f9f6;
+            color: $ad-muted;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            border-bottom: 1px solid $ad-border;
+        }
+
+        td { padding: 0.8rem 1rem; }
+
+        th:first-child, td:first-child { padding-left: 1.25rem; }
+        th:last-child, td:last-child { padding-right: 1.25rem; }
+
+        tbody tr:last-child td { border-bottom: 0; }
+
+        a.fw-semibold { color: $ad-text; &:hover { color: $ad-green; } }
+    }
+
+    .table-light { --bs-table-bg: #fffbea; }
+
+    // Initiales des partenaires sans logo
+    .partner-initials {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: #e8f0e3;
+        color: $ad-green;
+        font-weight: 600;
+    }
+
+    // -----------------------------------------------------------------------
+    // Badges en teintes douces
+    // -----------------------------------------------------------------------
+    .badge {
+        padding: 0.3em 0.65em;
+        border-radius: 6px;
+        font-size: 0.74rem;
+        font-weight: 500;
+        letter-spacing: 0;
+
+        &.fs-6 { font-size: 0.8rem !important; }
+    }
+
+    @each $name, $bg, $fg in (
+        'success' #e5f1df #2c6611,
+        'warning' #fdf2c8 #775600,
+        'danger' #fbe3e0 #a3271b,
+        'secondary' #eceee9 #4e5a53,
+        'info' #e2edf7 #23507a,
+        'primary' #e2edf7 #23507a
+    ) {
+        .badge.bg-#{$name} { background-color: $bg !important; color: $fg !important; }
+    }
+
+    // -----------------------------------------------------------------------
+    // Boutons
+    // -----------------------------------------------------------------------
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        box-shadow: none;
+    }
+
+    .btn-sm { padding: 0.32rem 0.65rem; font-size: 0.8rem; }
+    .btn-lg { padding: 0.65rem 1.25rem; font-size: 0.95rem; }
+
+    .btn-brand, .btn-success {
+        background: $ad-green;
+        border: 1px solid $ad-green;
+        color: #fff;
+
+        &:hover, &:focus { background: $ad-green-hover; border-color: $ad-green-hover; color: #fff; }
+    }
+
+    .btn-outline-brand, .btn-outline-secondary, .btn-light {
+        background: $ad-surface;
+        border: 1px solid $ad-border-strong;
+        color: $ad-text;
+
+        &:hover, &:focus { background: $ad-bg; border-color: $ad-border-strong; color: $ad-text; }
+    }
+
+    .btn-outline-danger {
+        background: $ad-surface;
+        border: 1px solid $ad-border-strong;
+        color: #a3271b;
+
+        &:hover, &:focus { background: #fbe3e0; border-color: #f0c2bc; color: #a3271b; }
+    }
+
+    // -----------------------------------------------------------------------
+    // Formulaires
+    // -----------------------------------------------------------------------
+    .form-label { margin-bottom: 0.35rem; font-size: 0.82rem; font-weight: 600; color: $ad-text; }
+    .form-text { font-size: 0.76rem; color: $ad-muted; }
+
+    .form-control, .form-select {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid $ad-border-strong;
+        border-radius: 8px;
+        background-color: $ad-surface;
+        font-size: 0.875rem;
+
+        &:focus { border-color: $ad-green; box-shadow: 0 0 0 3px rgba($ad-green, 0.12); }
+    }
+
+    .form-control-sm, .form-select-sm { padding: 0.35rem 0.65rem; font-size: 0.8rem; }
+
+    .form-check-input:checked { background-color: $ad-green; border-color: $ad-green; }
+    .form-check-input:focus { border-color: $ad-green; box-shadow: 0 0 0 3px rgba($ad-green, 0.12); }
+
+    .input-group-text { background: $ad-bg; border-color: $ad-border-strong; }
+
+    dl.row dt { font-weight: 500; color: $ad-muted; }
+    dl.row dd { margin-bottom: 0.85rem; }
+
+    // -----------------------------------------------------------------------
+    // Divers Bootstrap
+    // -----------------------------------------------------------------------
+    .dropdown-menu {
+        --bs-dropdown-font-size: 0.875rem;
+        --bs-dropdown-link-active-bg: #{$ad-green};
+
+        padding: 0.35rem;
+        border: 1px solid $ad-border;
+        border-radius: $ad-radius;
+        box-shadow: 0 12px 32px -12px rgba(15, 42, 28, 0.25);
+
+        .dropdown-item { border-radius: 6px; padding: 0.45rem 0.7rem; }
+    }
+
+    .list-group-item { border-color: $ad-border; }
+
+    .alert { border-radius: $ad-radius; font-size: 0.875rem; }
+
+    .pagination {
+        --bs-pagination-color: #{$ad-text};
+        --bs-pagination-active-bg: #{$ad-green};
+        --bs-pagination-active-border-color: #{$ad-green};
+        --bs-pagination-hover-color: #{$ad-green};
+        --bs-pagination-focus-box-shadow: 0 0 0 3px rgba(1, 77, 35, 0.12);
+
+        margin-bottom: 0;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Page de connexion
+// ---------------------------------------------------------------------------
+.admin-login {
+    background: $ad-surface;
+
+    .login-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        min-height: 100vh;
+
+        @media (max-width: 991.98px) { grid-template-columns: 1fr; }
+    }
+
+    .login-visual {
+        position: relative;
+        overflow: hidden;
+        background: $ad-green;
+
+        @media (max-width: 991.98px) { display: none; }
+    }
+
+    .login-visual-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+
+    .login-visual-caption {
+        position: absolute;
+        inset: auto 0 0 0;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 6rem 2.5rem 2rem;
+        background: linear-gradient(transparent, rgba(1, 30, 14, 0.75) 45%, rgba(1, 30, 14, 0.92));
+        color: rgba(255, 255, 255, 0.8);
+
+        strong { display: block; color: #fff; font-family: 'Calicanto', Georgia, serif; font-weight: 800; font-size: 1.35rem; }
+    }
+
+    .login-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1.5rem;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 380px;
+
+        h1 { font-family: 'Calicanto', Georgia, serif; font-weight: 800; font-size: 2rem; color: $ad-green; margin-bottom: 0.4rem; }
+        .form-control { padding: 0.65rem 0.85rem; }
+        .btn { padding: 0.7rem 1rem; }
+    }
+
+    .login-back { display: inline-block; margin-top: 2rem; color: $ad-muted; font-size: 0.82rem; &:hover { color: $ad-green; } }
+}

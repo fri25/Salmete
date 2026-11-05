@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" role="img" aria-label="Logo SaLMeTE">
+  <circle cx="100" cy="34" r="28" fill="#fbc201"/>
+  <path d="M40 72h50c-24 40-24 116 0 156H40c-17 0-28-11-28-28V100c0-17 11-28 28-28Z" fill="#014d23"/>
+  <path d="M106 72h54c17 0 28 11 28 28v100c0 17-11 28-28 28h-54c-24-40-24-116 0-156Z" fill="#65a227"/>
+  <g fill="#ffffff">
+    <g transform="rotate(-38 52 150)">
+      <path d="M30 114h34l16 5v12l-16 5H30a4 4 0 0 1-4-4v-14a4 4 0 0 1 4-4Z"/>
+      <rect x="45" y="130" width="14" height="56" rx="6"/>
+    </g>
+    <path d="M146 98c-22 14-24 44-2 54 4-10 4-22 2-30 3 9 4 20 0 30 22-8 22-40 0-54Z"/>
+    <ellipse cx="146" cy="160" rx="17" ry="7"/>
+    <path d="M100 184c14-10 30-14 44-14 10 0 20-3 30-9 6-3 11 4 6 9-14 14-36 26-60 26-8 0-14-3-20-6Z"/>
+    <path d="M100 176c8-6 16-8 26-8h14c6 0 6 8 0 8h-18" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>

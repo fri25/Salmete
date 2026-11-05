@@ -1,0 +1,520 @@
+// ---------------------------------------------------------------------------
+// SaLMeTE 2026 — chaîne Bootstrap 5 personnalisée (charte officielle)
+// ---------------------------------------------------------------------------
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+// Variables Bootstrap à surcharger AVANT l'import
+$primary: #014d23;
+$success: #65a227;
+$warning: #fbc201;
+$danger: #c0392b;
+$info: #17a2b8;
+$light: #f4f8f5;
+$dark: #0a2e1f;
+$body-color: #24352c;
+$body-bg: #ffffff;
+$border-radius: 0.45rem;
+$border-radius-sm: 0.25rem;
+$link-decoration: none;
+$font-family-sans-serif: 'Poppins', sans-serif;
+
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// ---------------------------------------------------------------------------
+// Variables maison
+// ---------------------------------------------------------------------------
+$brand-green-dark: #014d23;
+$brand-green: #014d23;
+$brand-green-soft: #edf4e9;
+$brand-green-secondary: #65a227;
+$brand-gold: #fbc201;
+$brand-gold-dark: #d79f00;
+
+// ---------------------------------------------------------------------------
+// Base
+// ---------------------------------------------------------------------------
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, .section-title, .page-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+a {
+    &:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+}
+
+.text-brand { color: $brand-green !important; }
+.text-gold { color: $brand-gold-dark !important; }
+.bg-brand { background-color: $brand-green !important; }
+.bg-brand-dark { background-color: $brand-green-dark !important; }
+.bg-brand-soft { background-color: $brand-green-soft !important; }
+.bg-gold { background-color: $brand-gold !important; }
+.border-brand { border-color: $brand-green !important; }
+
+// ---------------------------------------------------------------------------
+// Boutons
+// ---------------------------------------------------------------------------
+.btn {
+    font-weight: 600;
+    padding: 0.6rem 1.4rem;
+
+    &-brand {
+        background-color: $brand-green;
+        border-color: $brand-green;
+        color: #fff;
+
+        &:hover, &:focus {
+            background-color: $brand-green-dark;
+            border-color: $brand-green-dark;
+            color: #fff;
+        }
+    }
+
+    &-gold {
+        background-color: $brand-gold;
+        border-color: $brand-gold;
+        color: $brand-green-dark;
+
+        &:hover, &:focus {
+            background-color: $brand-gold-dark;
+            border-color: $brand-gold-dark;
+            color: $brand-green-dark;
+        }
+    }
+
+    &-outline-brand {
+        border: 2px solid $brand-green;
+        color: $brand-green;
+        background: transparent;
+
+        &:hover, &:focus {
+            background-color: $brand-green;
+            color: #fff;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Navbar
+// ---------------------------------------------------------------------------
+.site-navbar {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 14px rgba(8, 69, 44, 0.12);
+
+    .navbar-brand {
+        font-weight: 800;
+        color: $brand-green;
+        font-size: 1.35rem;
+        text-decoration: none;
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            flex-shrink: 0;
+            margin-right: 0.55rem;
+        }
+    }
+
+    .nav-link {
+        font-weight: 600;
+        color: #1d3a2c;
+        padding-inline: 0.85rem !important;
+
+        &:hover, &.active {
+            color: $brand-green;
+        }
+
+        &.active::after {
+            content: '';
+            display: block;
+            height: 3px;
+            width: 60%;
+            margin: 4px auto 0;
+            background: $brand-gold;
+            border-radius: 3px;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Hero
+// ---------------------------------------------------------------------------
+.hero {
+    position: relative;
+    color: #fff;
+    background:
+        linear-gradient(105deg, rgba(1, 77, 35, 0.95) 0%, rgba(1, 77, 35, 0.88) 42%, rgba(1, 77, 35, 0.72) 100%),
+        url('/images/brand/hero.jpg') center 30% / cover no-repeat;
+    padding: 7rem 0 6rem;
+
+    .hero-badge {
+        display: inline-block;
+        background: rgba(242, 183, 5, 0.95);
+        color: $brand-green-dark;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        padding: 0.45rem 1.1rem;
+        border-radius: 50rem;
+    }
+
+    h1 {
+        font-weight: 800;
+        font-size: clamp(2rem, 4.5vw, 3.4rem);
+        line-height: 1.15;
+    }
+
+    .hero-subtitle {
+        font-size: 1.15rem;
+        max-width: 760px;
+        color: rgba(255, 255, 255, 0.92);
+    }
+
+    .hero-meta {
+        .meta-item {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+            border-radius: 0.75rem;
+            padding: 0.85rem 1.1rem;
+            font-weight: 600;
+
+            i { color: $brand-gold; font-size: 1.25rem; }
+        }
+    }
+}
+
+.page-hero {
+    background: linear-gradient(120deg, $brand-green-dark, $brand-green);
+    color: #fff;
+    padding: 3.4rem 0 2.8rem;
+
+    h1 { font-weight: 800; margin: 0; }
+    .breadcrumb { a { color: rgba(255,255,255,.85); } .breadcrumb-item.active { color: $brand-gold; } }
+}
+
+// ---------------------------------------------------------------------------
+// Sections
+// ---------------------------------------------------------------------------
+.section { padding: 4.5rem 0; }
+.section-sm { padding: 3rem 0; }
+
+.section-title {
+    font-weight: 800;
+    color: $brand-green-dark;
+    position: relative;
+    padding-bottom: 0.8rem;
+    margin-bottom: 2.2rem;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 64px;
+        height: 4px;
+        border-radius: 4px;
+        background: $brand-gold;
+    }
+
+    &.text-center::after { left: 50%; transform: translateX(-50%); }
+}
+
+.lead-soft { color: #4a5f54; font-size: 1.08rem; }
+
+// ---------------------------------------------------------------------------
+// Cartes
+// ---------------------------------------------------------------------------
+.card {
+    border: none;
+    box-shadow: 0 4px 18px rgba(8, 69, 44, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 32px rgba(8, 69, 44, 0.16);
+    }
+}
+
+.icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    background: $brand-green-soft;
+    color: $brand-green;
+}
+
+.icon-circle-gold {
+    background: rgba(242, 183, 5, 0.18);
+    color: $brand-gold-dark;
+}
+
+// Chiffres clés
+.stat-card {
+    text-align: center;
+    padding: 1.8rem 1rem;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba(8, 69, 44, 0.08);
+    height: 100%;
+
+    .stat-number {
+        font-size: 2.6rem;
+        font-weight: 800;
+        color: $brand-green;
+        line-height: 1;
+    }
+
+    .stat-label {
+        margin-top: 0.5rem;
+        font-weight: 600;
+        color: #51695d;
+        font-size: 0.95rem;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Partenaires
+// ---------------------------------------------------------------------------
+.partner-card {
+    background: #fff;
+    border-radius: 0.85rem;
+    padding: 1.4rem 1rem;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0 4px 14px rgba(8, 69, 44, 0.07);
+    transition: transform .25s ease, box-shadow .25s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgba(8, 69, 44, 0.14);
+    }
+
+    .partner-logo {
+        width: 100%;
+        height: 96px;
+        object-fit: contain;
+        margin-bottom: 0.8rem;
+    }
+
+    .partner-initials {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 0.8rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: #fff;
+        background: linear-gradient(135deg, $brand-green, $brand-green-dark);
+    }
+
+    .partner-name { font-weight: 700; color: $brand-green-dark; font-size: 0.98rem; }
+    .partner-cat { font-size: 0.8rem; color: $brand-gold-dark; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+}
+
+// ---------------------------------------------------------------------------
+// Galerie
+// ---------------------------------------------------------------------------
+.gallery-item {
+    position: relative;
+    display: block;
+    border-radius: 0.85rem;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    box-shadow: 0 4px 14px rgba(8, 69, 44, 0.12);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .4s ease;
+    }
+
+    &:hover img { transform: scale(1.08); }
+
+    .gallery-caption {
+        position: absolute;
+        inset: auto 0 0 0;
+        padding: 2.2rem 1rem 0.9rem;
+        background: linear-gradient(transparent, rgba(8, 45, 28, 0.88));
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9rem;
+
+        small {
+            display: block;
+            color: $brand-gold;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Agenda
+// ---------------------------------------------------------------------------
+.agenda-day {
+    .day-header {
+        background: $brand-green;
+        color: #fff;
+        border-radius: 0.75rem 0.75rem 0 0;
+        padding: 1rem 1.4rem;
+        font-weight: 700;
+
+        i { color: $brand-gold; }
+    }
+
+    .agenda-row {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 1rem;
+        padding: 1.1rem 1.4rem;
+        background: #fff;
+        border-bottom: 1px solid #e5efe9;
+
+        &:last-child { border-bottom: none; border-radius: 0 0 .75rem .75rem; }
+
+        .agenda-time {
+            font-weight: 700;
+            color: $brand-green;
+            white-space: nowrap;
+        }
+
+        .agenda-location {
+            font-size: 0.85rem;
+            color: #6a7f74;
+            i { color: $brand-gold-dark; }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tarifs / sponsoring
+// ---------------------------------------------------------------------------
+.pricing-card {
+    .card-header-pricing {
+        background: $brand-green-soft;
+        padding: 1.3rem 1.3rem 1rem;
+        border-radius: .85rem .85rem 0 0;
+
+        .price {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: $brand-green-dark;
+        }
+    }
+
+    &.featured {
+        border: 2px solid $brand-gold;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Formulaires
+// ---------------------------------------------------------------------------
+.form-control, .form-select {
+    padding: 0.65rem 0.9rem;
+    border-color: #cfded5;
+
+    &:focus {
+        border-color: $brand-green;
+        box-shadow: 0 0 0 .22rem rgba(1, 77, 35, 0.15);
+    }
+}
+
+.form-label { font-weight: 600; color: #234033; }
+
+// ---------------------------------------------------------------------------
+// Footer
+// ---------------------------------------------------------------------------
+.site-footer {
+    background: $brand-green-dark;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 3.5rem 0 1.5rem;
+    margin-top: auto;
+
+    h6 {
+        color: $brand-gold;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        font-weight: 700;
+        margin-bottom: 1.1rem;
+    }
+
+    a { color: rgba(255, 255, 255, 0.82); }
+    a:hover { color: #fff; }
+
+    .social-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        margin-right: .5rem;
+        font-size: 1.1rem;
+        color: #fff;
+        text-decoration: none !important;
+
+        &:hover { background: $brand-gold; color: $brand-green-dark; }
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        margin-top: 2.5rem;
+        padding-top: 1.4rem;
+        font-size: 0.88rem;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Divers
+// ---------------------------------------------------------------------------
+.breadcrumb-dark .breadcrumb-item + .breadcrumb-item::before { content: '›'; color: rgba(255,255,255,.6); }
+
+.odd-section { background: #f6faf7; }
+
+.object-fit-cover { object-fit: cover; }
+
+@media (max-width: 767.98px) {
+    .hero { padding: 4.5rem 0 3.5rem; }
+    .agenda-row { grid-template-columns: 1fr; gap: .35rem; }
+}
+
+// ---------------------------------------------------------------------------
+// Thème public (charte SaLMeTE 2026, mise en page inspirée d'Upstart)
+// ---------------------------------------------------------------------------
+@import 'calicanto';
+@import 'salmete-public';
+
+// ---------------------------------------------------------------------------
+// Interface d'administration
+// ---------------------------------------------------------------------------
+@import 'admin';

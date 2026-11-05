@@ -1,0 +1,144 @@
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-MediumItalic.eot');
+    src: local('Calicanto Medium Italic'), local('Calicanto-MediumItalic'),
+        url('Calicanto-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-MediumItalic.woff2') format('woff2'),
+        url('Calicanto-MediumItalic.woff') format('woff'),
+        url('Calicanto-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-Regular.eot');
+    src: local('Calicanto Regular'), local('Calicanto-Regular'),
+        url('Calicanto-Regular.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-Regular.woff2') format('woff2'),
+        url('Calicanto-Regular.woff') format('woff'),
+        url('Calicanto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-SemiBoldItalic.eot');
+    src: local('Calicanto SemiBold Italic'), local('Calicanto-SemiBoldItalic'),
+        url('Calicanto-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-SemiBoldItalic.woff2') format('woff2'),
+        url('Calicanto-SemiBoldItalic.woff') format('woff'),
+        url('Calicanto-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-ExtraBoldItalic.eot');
+    src: local('Calicanto ExtraBold Italic'), local('Calicanto-ExtraBoldItalic'),
+        url('Calicanto-ExtraBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-ExtraBoldItalic.woff2') format('woff2'),
+        url('Calicanto-ExtraBoldItalic.woff') format('woff'),
+        url('Calicanto-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-Medium.eot');
+    src: local('Calicanto Medium'), local('Calicanto-Medium'),
+        url('Calicanto-Medium.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-Medium.woff2') format('woff2'),
+        url('Calicanto-Medium.woff') format('woff'),
+        url('Calicanto-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-LightItalic.eot');
+    src: local('Calicanto Light Italic'), local('Calicanto-LightItalic'),
+        url('Calicanto-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-LightItalic.woff2') format('woff2'),
+        url('Calicanto-LightItalic.woff') format('woff'),
+        url('Calicanto-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-Light.eot');
+    src: local('Calicanto Light'), local('Calicanto-Light'),
+        url('Calicanto-Light.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-Light.woff2') format('woff2'),
+        url('Calicanto-Light.woff') format('woff'),
+        url('Calicanto-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-RegularItalic.eot');
+    src: local('Calicanto Regular Italic'), local('Calicanto-RegularItalic'),
+        url('Calicanto-RegularItalic.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-RegularItalic.woff2') format('woff2'),
+        url('Calicanto-RegularItalic.woff') format('woff'),
+        url('Calicanto-RegularItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-Bold.eot');
+    src: local('Calicanto Bold'), local('Calicanto-Bold'),
+        url('Calicanto-Bold.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-Bold.woff2') format('woff2'),
+        url('Calicanto-Bold.woff') format('woff'),
+        url('Calicanto-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-BoldItalic.eot');
+    src: local('Calicanto Bold Italic'), local('Calicanto-BoldItalic'),
+        url('Calicanto-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-BoldItalic.woff2') format('woff2'),
+        url('Calicanto-BoldItalic.woff') format('woff'),
+        url('Calicanto-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-ExtraBold.eot');
+    src: local('Calicanto ExtraBold'), local('Calicanto-ExtraBold'),
+        url('Calicanto-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-ExtraBold.woff2') format('woff2'),
+        url('Calicanto-ExtraBold.woff') format('woff'),
+        url('Calicanto-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Calicanto';
+    src: url('Calicanto-SemiBold.eot');
+    src: local('Calicanto SemiBold'), local('Calicanto-SemiBold'),
+        url('Calicanto-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('Calicanto-SemiBold.woff2') format('woff2'),
+        url('Calicanto-SemiBold.woff') format('woff'),
+        url('Calicanto-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
