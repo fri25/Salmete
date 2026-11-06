@@ -1,0 +1,259 @@
+# =============================================================================
+# SaLMeTE — stack de production Docker (Laravel 13 / PHP 8.4 / MySQL 8.4)
+# -----------------------------------------------------------------------------
+# Mise en place :
+#   cp .env.docker.example .env
+#   # renseigner APP_KEY, DB_PASSWORD, MYSQL_ROOT_PASSWORD (voir .env.docker.example)
+#   docker compose build
+#   docker compose up -d
+#   docker compose exec app php artisan db:seed --force   # contenu initial + admin
+#
+# Exposition : Apache (`app`) écoute sur le port 80 INTERNE, sans port publié.
+# Traefik central (réseau externe `proxy`, voir /home/fantome/traefik) termine
+# le TLS Let's Encrypt et route https://salmete.com (+ www -> apex).
+#
+# Les services `queue` et `scheduler` réutilisent la même image que `app`.
+# =============================================================================
+name: salmete
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  # ---------------------------------------------------------------------------
+  # Application : Apache + PHP 8.4, migrations et caches au démarrage.
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      target: prod
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-https://salmete.com}
+      APP_KEY: ${APP_KEY:-}
+      # En Docker, la base est toujours le service `mysql` du réseau interne.
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-salmete}
+      DB_USERNAME: ${DB_USERNAME:-salmete}
+      DB_PASSWORD: ${DB_PASSWORD:?Renseigner DB_PASSWORD dans .env}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      SESSION_DRIVER: ${SESSION_DRIVER:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      FILESYSTEM_DISK: ${FILESYSTEM_DISK:-public}
+      # Derrière Traefik : on ne fait confiance qu'aux sous-réseaux privés.
+      # (Utilisé par bootstrap/app.php ; jamais '*' en production.)
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      PORT: "80"
+    volumes:
+      # Uploads (galerie, logos, affiche) + sessions/caches/vues + logs.
+      - app-storage:/var/www/html/storage
+    depends_on:
+      mysql:
+        # service_started (et non service_healthy) pour éviter que Compose ne
+        # recrée MySQL à chaque build de `app`. L'attente de la base est gérée
+        # par docker-entrypoint.sh (30 tentatives) + le healthcheck de mysql.
+        condition: service_started
+    networks:
+      - default
+      - proxy
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/salmete-healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    logging: *default-logging
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-proxy}"
+      # Apex canonique : salmete.com
+      - "traefik.http.routers.salmete.rule=Host(`${APP_DOMAIN:-salmete.com}`)"
+      - "traefik.http.routers.salmete.entrypoints=websecure"
+      - "traefik.http.routers.salmete.tls=true"
+      - "traefik.http.routers.salmete.tls.certresolver=${CERT_RESOLVER:-letsencrypt}"
+      - "traefik.http.services.salmete.loadbalancer.server.port=80"
+      # www.salmete.com -> salmete.com (301, chemin conservé)
+      - "traefik.http.routers.salmete-www.rule=Host(`www.${APP_DOMAIN:-salmete.com}`)"
+      - "traefik.http.routers.salmete-www.entrypoints=websecure"
+      - "traefik.http.routers.salmete-www.tls=true"
+      - "traefik.http.routers.salmete-www.tls.certresolver=${CERT_RESOLVER:-letsencrypt}"
+      - "traefik.http.routers.salmete-www.middlewares=salmete-www-redirect"
+      - "traefik.http.routers.salmete-www.service=salmete"
+      - "traefik.http.middlewares.salmete-www-redirect.redirectregex.regex=^https?://www[.]([^/]+)(/.*)?"
+      - "traefik.http.middlewares.salmete-www-redirect.redirectregex.replacement=https://${APP_DOMAIN:-salmete.com}$$2"
+      - "traefik.http.middlewares.salmete-www-redirect.redirectregex.permanent=true"
+
+  # ---------------------------------------------------------------------------
+  # Files d'attente (emails/notifications éventuels) — même image, sans HTTP.
+  # UID www-data (33) pour que les logs écrits dans le volume partagé restent
+  # modifiables par Apache.
+  # ---------------------------------------------------------------------------
+  queue:
+    build:
+      context: .
+      target: prod
+    restart: unless-stopped
+    user: "33:33"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:-}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-salmete}
+      DB_USERNAME: ${DB_USERNAME:-salmete}
+      DB_PASSWORD: ${DB_PASSWORD:?Renseigner DB_PASSWORD dans .env}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      FILESYSTEM_DISK: ${FILESYSTEM_DISK:-public}
+    command: ["php", "artisan", "queue:work", "--tries=3", "--sleep=3", "--max-time=3600"]
+    stop_grace_period: 30s
+    volumes:
+      - app-storage:/var/www/html/storage
+    depends_on:
+      app:
+        condition: service_healthy
+    logging: *default-logging
+
+  # ---------------------------------------------------------------------------
+  # Ordonnanceur Laravel (schedule:work). Aucune tâche planifiée n'existe
+  # encore dans routes/console.php : le service est prêt pour les sauvegardes
+  # ou nettoyages futurs.
+  # ---------------------------------------------------------------------------
+  scheduler:
+    build:
+      context: .
+      target: prod
+    restart: unless-stopped
+    user: "33:33"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:-}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-salmete}
+      DB_USERNAME: ${DB_USERNAME:-salmete}
+      DB_PASSWORD: ${DB_PASSWORD:?Renseigner DB_PASSWORD dans .env}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      FILESYSTEM_DISK: ${FILESYSTEM_DISK:-public}
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - app-storage:/var/www/html/storage
+    depends_on:
+      app:
+        condition: service_healthy
+    logging: *default-logging
+
+  # ---------------------------------------------------------------------------
+  # Base de données MySQL 8.4 — volume persistant, jamais exposée à l'hôte.
+  # ---------------------------------------------------------------------------
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-salmete}
+      MYSQL_USER: ${DB_USERNAME:-salmete}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Renseigner DB_PASSWORD dans .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Renseigner MYSQL_ROOT_PASSWORD dans .env}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    logging: *default-logging
+
+  # ---------------------------------------------------------------------------
+  # Adminer — administration de la base, optionnel (profil `tools`).
+  #   docker compose --profile tools up -d adminer
+  # Protégé par basic-auth Traefik. Renseigner ADMINER_DOMAIN et
+  # ADMINER_BASIC_AUTH dans .env (voir .env.docker.example).
+  # ---------------------------------------------------------------------------
+  adminer:
+    profiles: ["tools"]
+    image: adminer:4
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    networks:
+      - default
+      - proxy
+    depends_on:
+      mysql:
+        condition: service_healthy
+    logging: *default-logging
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-proxy}"
+      - "traefik.http.routers.salmete-adminer.rule=Host(`${ADMINER_DOMAIN:-db.salmete.com}`)"
+      - "traefik.http.routers.salmete-adminer.entrypoints=websecure"
+      - "traefik.http.routers.salmete-adminer.tls=true"
+      - "traefik.http.routers.salmete-adminer.tls.certresolver=${CERT_RESOLVER:-letsencrypt}"
+      - "traefik.http.routers.salmete-adminer.service=salmete-adminer"
+      - "traefik.http.routers.salmete-adminer.middlewares=salmete-adminer-auth"
+      - "traefik.http.services.salmete-adminer.loadbalancer.server.port=8080"
+      # Auth dans .env, jamais dans ce fichier versionné.
+      # Sans valeur, le routeur refuse tout accès (401) : fail-closed.
+      - "traefik.http.middlewares.salmete-adminer-auth.basicauth.users=${ADMINER_BASIC_AUTH:-}"
+
+  # ---------------------------------------------------------------------------
+  # Tests PHPUnit — hors profil, jamais démarré par `docker compose up`.
+  #   docker compose --profile test run --rm tests
+  # ---------------------------------------------------------------------------
+  tests:
+    profiles: ["test"]
+    build:
+      context: .
+      target: tests
+    restart: "no"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Priment sur phpunit.xml et sur le .env (Laravel lit $_SERVER en premier).
+      APP_ENV: testing
+      APP_DEBUG: true
+      APP_KEY: ${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+      # SQLite en mémoire : le conteneur de test ne touche JAMAIS MySQL.
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      DB_URL: ""
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      MAIL_MAILER: array
+    command: ["php", "artisan", "test"]
+
+volumes:
+  mysql-data:
+  # Uploads + sessions + caches + vues compilées + logs.
+  app-storage:
+
+networks:
+  proxy:
+    name: ${TRAEFIK_NETWORK:-proxy}
+    external: true
