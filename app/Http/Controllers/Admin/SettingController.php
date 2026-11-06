@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Setting;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,8 +32,16 @@ class SettingController extends Controller
         return view('admin.settings.edit', compact('settings'));
     }
 
-    public function update(Request $request)
+public function update(Request $request)
     {
+        if ($request->filled('change_password') && $request->password === $request->password_confirmation) {
+            $user = User::where('is_admin', true)->first();
+            if ($user) {
+                $user->password = Hash::make($request->password);
+                $user->save();
+            }
+        }
+
         $request->validate([
             ...array_fill_keys($this->fields, 'nullable|string|max:5000'),
             'site_name' => 'required|string|max:255',

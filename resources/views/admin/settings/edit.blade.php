@@ -149,6 +149,25 @@
         </div>
     </div>
 
+    {{-- Changement de mot de passe --}}
+    <div class="card mt-4">
+        <div class="card-header bg-white"><h2 class="h6 mb-0 text-brand"><i class="bi bi-lock me-2"></i>Changement de mot de passe</h2></div>
+        <div class="card-body">
+            <p class="text-muted small">Entrez votre nouveau mot de passe pour remplacer l'actuel.</p>
+            <input type="hidden" name="change_password" value="1">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nouveau mot de passe</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Confirmation</label>
+                    <input type="password" name="password_confirmation" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-brand btn-lg mb-4"><i class="bi bi-save me-2"></i>Enregistrer tous les paramètres</button>
 </form>
 @endsection
