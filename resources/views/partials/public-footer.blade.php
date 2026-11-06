@@ -51,7 +51,7 @@
             <span>© {{ date('Y') }} {{ \App\Models\Setting::get('site_name') }} — Tous droits réservés.</span>
             <span class="small">
                 {{ \App\Models\Setting::get('event_dates') }} · {{ \App\Models\Setting::get('event_location') }}
-                · <a href="{{ route('login') }}"><i class="bi bi-shield-lock me-1"></i>Espace admin</a>
+                
             </span>
         </div>
     </div>
