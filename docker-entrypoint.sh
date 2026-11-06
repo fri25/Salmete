@@ -58,6 +58,23 @@ done
 # 5. Lien public/storage (images de la galerie, logos partenaires).
 php artisan storage:link --force --no-interaction || true
 
+# 5 bis. Import des photos de galerie livrées avec l'image (img/) quand le
+# volume `app-storage` est vide (premier déploiement). Le seeder attend des
+# fichiers nommés gallery/gal-001.jpg, gal-002.jpg, etc. Idempotent : ne fait
+# rien dès que le dossier contient au moins un fichier (uploads conservés).
+gallery_dir="/var/www/html/storage/app/public/gallery"
+if [ -d /var/www/html/img ] && [ -z "$(ls -A "$gallery_dir" 2>/dev/null || true)" ]; then
+    echo "[entrypoint] import des photos de galerie initiales (img/)..."
+    mkdir -p "$gallery_dir"
+    numero=1
+    for photo in /var/www/html/img/*.jpg; do
+        [ -f "$photo" ] || continue
+        cp "$photo" "$(printf '%s/gal-%03d.jpg' "$gallery_dir" "$numero")"
+        numero=$((numero + 1))
+    done
+    chown -R www-data:www-data "$gallery_dir"
+fi
+
 # 6. Découverte des packages (compense le --no-scripts du build Composer).
 php artisan package:discover --ansi || true
 
