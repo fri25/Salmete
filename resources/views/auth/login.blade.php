@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Connexion admin — {{ \App\Models\Setting::get('site_name') }}</title>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/brand/logo-mark.svg') }}">
+    @include('partials.favicon')
 </head>
 <body class="admin-body admin-login">
     <div class="login-shell">
