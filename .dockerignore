@@ -1,9 +1,12 @@
 .git
+.agents
+.claude
 .env
 .env.*
 !.env.example
 vendor
 node_modules
+deploy-alwaysdata.sh
 storage/*.key
 storage/logs/*
 bootstrap/cache/*.php
